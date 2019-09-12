@@ -11,10 +11,6 @@ public class FeatureModelEditor {
 		this.metamodel = metamodel;
 	}
 	
-	public static void main(String[] Args) {
-		
-	}
-	
 	public EObject createaFeature(String featureName, EClass superFeature) {
 		EClass aFeatureClass = (EClass) metamodel.getEClassifier("Feature");
 		EObject aFeature = metamodel.getEFactoryInstance().create(aFeatureClass);
