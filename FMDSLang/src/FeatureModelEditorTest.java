@@ -26,7 +26,14 @@ class FeatureModelEditorTest {
 		EClass aFeatureClass = (EClass) aDSL.getEClassifier("Feature");
 		EObject aRootFeature = anFMEditor.createaFeature("featureA", null);
 		EStructuralFeature featureNameAttribute = aFeatureClass.getEStructuralFeature("featureName");
+
+		EObject aSubFeature = anFMEditor.createaFeature("featureB", aRootFeature);
+		EStructuralFeature superFeatureAttribute = aFeatureClass.getEStructuralFeature("superFeature");
+
 		assertEquals(aRootFeature.eGet(featureNameAttribute),"featureA");
+		assertEquals(((EObject)aSubFeature
+				.eGet(superFeatureAttribute))
+				.eGet(featureNameAttribute), "featureA");
 	}
 	
 

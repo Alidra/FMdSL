@@ -1,4 +1,5 @@
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
@@ -7,6 +8,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.ENamedElement;
+import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,6 +19,7 @@ class FMDSLEditorTest {
 	EAttribute anEAttribute;
 	ArrayList<EAttribute> eClassAttributes = new ArrayList<>();
 	EClass AnEFeature;
+	EPackage aMetamodel;
 
 	@BeforeEach
 	void setUp() {
@@ -24,6 +27,7 @@ class FMDSLEditorTest {
 		anEAttribute = aCreator.createEAttribute("FeatureName", "getEString");
 		eClassAttributes.add(anEAttribute);
 		AnEFeature = aCreator.createEClass("Feature", eClassAttributes);
+		aMetamodel = aCreator.createFMMetamodel();
 	}
 
 	@Test
@@ -37,7 +41,18 @@ class FMDSLEditorTest {
 		assertEquals(AnEFeature.getEAllAttributes().size(), 1);	
 		assertEquals(AnEFeature.getEAllAttributes().get(0).getName(), "FeatureName");	
 	}
-	
+	@Test
+	void testCreateMetamodel_attributesOfFeature() {
+		EClass FeatureClass = (EClass) aMetamodel.getEClassifier("Feature");
+		assertEquals(FeatureClass.getEStructuralFeatures().size(),2);
+		assertNotEquals(FeatureClass.getEStructuralFeature("superFeature"),null);
+		assertNotEquals(FeatureClass.getEStructuralFeature("featureName"),null);
+		
+		EClass ConstraintClass = (EClass) aMetamodel.getEClassifier("Constraint");
+		assertEquals(ConstraintClass.getEStructuralFeatures().size(),1);
+		assertNotEquals(ConstraintClass.getEStructuralFeature("ConstraintID"),null);
+
+	}
 	@Test
 	void testCreateReference() {
 		EReference anEReference = aCreator.createEReference(AnEFeature, AnEFeature, "superFeature");
@@ -49,6 +64,7 @@ class FMDSLEditorTest {
 		assertEquals(((ENamedElement) anERef.eContainer()).getName()
 				,AnEFeature.getName());
 	}
+
 	@Test
 	void testCreateMirorReference() {
 		EReference anEReference = aCreator.createEReference(AnEFeature, AnEFeature, "superFeature","subFeatures");
@@ -64,5 +80,4 @@ class FMDSLEditorTest {
 				,AnEFeature.getName());
 
 	}
-
 }

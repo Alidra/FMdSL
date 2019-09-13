@@ -11,13 +11,17 @@ public class FeatureModelEditor {
 		this.metamodel = metamodel;
 	}
 	
-	public EObject createaFeature(String featureName, EClass superFeature) {
+	public EObject createaFeature(String featureName, EObject aRootFeature) {
 		EClass aFeatureClass = (EClass) metamodel.getEClassifier("Feature");
 		EObject aFeature = metamodel.getEFactoryInstance().create(aFeatureClass);
 		EStructuralFeature featureNameAttribute = aFeatureClass.getEStructuralFeature("featureName");
 		aFeature.eSet(featureNameAttribute, featureName);
-		System.out.println("aFeature"+aFeature.eGet(featureNameAttribute));
+		EStructuralFeature superFeatureAttribute = aFeatureClass.getEStructuralFeature("superFeature");
+		aFeature.eSet(superFeatureAttribute, aRootFeature);
 		return aFeature;
 	}
 
 }
+
+
+
